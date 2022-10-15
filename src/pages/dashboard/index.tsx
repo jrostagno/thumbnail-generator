@@ -1,141 +1,157 @@
+/* eslint-disable react/jsx-key */
 /* eslint-disable @next/next/no-img-element */
 import { Box } from "@mui/system";
 import type { NextPage } from "next";
-import { useRef, useState } from "react";
-import AddIcon from "@mui/icons-material/Add";
+import { FormEvent, useRef, useState } from "react";
 
 import Layout from "../../components/Layout/Layout";
-import { Button, Stack, Typography } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import axios from "axios";
 import { getSession, useSession } from "next-auth/react";
+import UploadImage from "../../components/UploadImage/UploadImage";
+import { motion } from "framer-motion";
+
+import { FaDownload } from "react-icons/fa";
+import { DataImages } from "../../types/componets";
 
 const Home: NextPage = () => {
-  const [preview, setPreview] = useState();
-  const [previewEdited, setPreviewEdited] = useState();
-  const [urlImage, setUrlImage] = useState("");
-  const [images, setImages] = useState([]);
+  const [preview, setPreview] = useState<string>();
+  const [urlImage, setUrlImage] = useState<string>("");
+  const [images, setImages] = useState<DataImages>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const avatarRef = useRef();
+  const avatarRef = useRef<any>();
 
   const { data: session } = useSession();
 
-  const handleOnChange = async ({ target }) => {
-    const image = target.files[0];
-    setUrlImage(URL.createObjectURL(image));
-
-    await axios
-      .get("http://localhost:3000/api/thumbnails/")
-      .then((res) => setImages(res.data));
-
+  const handleOnChange = async (event: FormEvent<HTMLFormElement>) => {
+    setIsLoading(true);
+    const image = event.currentTarget.files[0];
     const reader = new FileReader();
-
     reader.onloadend = () => {
-      // avatarRef.current.src = reader.result;
-      setPreview(reader.result);
+      setPreview(reader.result as string);
     };
-
     reader.readAsDataURL(image);
+
+    setTimeout(async () => {
+      await axios
+        .get("http://localhost:3000/api/thumbnails/")
+        .then((res) => setImages(res.data));
+      setUrlImage(URL.createObjectURL(image));
+      setIsLoading(false);
+    }, 3000);
   };
 
-  console.log(images);
+  const saveImage = (filter: string, width: number, height: number) => {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = width;
+    canvas.height = height;
+
+    ctx!.filter = filter;
+    ctx!.translate(canvas.width / 2, canvas.height / 2);
+
+    ctx!.drawImage(
+      avatarRef.current,
+      -canvas.width / 2,
+      -canvas.height / 2,
+      canvas.width,
+      canvas.height
+    );
+
+    const link = document.createElement("a");
+    link.download = "image.jpg";
+    link.href = canvas.toDataURL();
+    link.click();
+  };
 
   return (
     <Layout session={session}>
       <Box
-        sx={{ display: "flex", justifyContent: "center", marginTop: "30px" }}
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          padding: "20px",
+          gap: "60px",
+          marginTop: "60px",
+          alignItems: "center",
+        }}
       >
-        <Box>
-          <Typography>Filters</Typography>
-          <Button>Bright</Button>
-        </Box>
-        <label htmlFor="datosImg">
-          <input
-            hidden
-            onChange={handleOnChange}
-            className="imgInput"
-            type="file"
-            id="datosImg"
+        <Stack spacing={3} sx={{ marginLeft: { xs: "0px", md: "60px" } }}>
+          <UploadImage
+            handleOnChange={handleOnChange}
+            preview={preview}
+            avatarRef={avatarRef}
           />
-          <div
-            id="avatar"
-            style={{
-              width: "350px",
-              height: "350px",
-              borderRadius: "100%",
-              border: "1px",
 
-              overflow: "hidden",
-            }}
-          >
-            {preview ? (
-              <div
-                id="avatar"
+          <Button variant="outlined">Apply</Button>
+        </Stack>
+        <Box
+          sx={{
+            margin: "auto",
+            display: "flex",
+            flexDirection: "row",
+            gap: "5rem",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            padding: "5rem",
+          }}
+        >
+          {isLoading ? (
+            <img src="./loading.gif" alt="loading" />
+          ) : (
+            images.map((image, index) => (
+              <motion.div
                 style={{
-                  width: "350px",
-                  height: "350px",
-                  borderRadius: "100%",
-                  border: "1px",
-
-                  overflow: "hidden",
-                }}
-              >
-                <img
-                  ref={avatarRef}
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                  src={preview}
-                  alt="avatar"
-                />
-              </div>
-            ) : (
-              <div
-                id="avatar"
-                style={{
-                  width: "350px",
-                  height: "350px",
-                  borderRadius: "100%",
-                  border: "1px dashed  lightgrey",
                   display: "flex",
-                  justifyContent: "center",
                   alignItems: "center",
-                  overflow: "hidden",
+                  flexDirection: "column",
+                  gap: "10px",
                 }}
+                animate={{ y: -50 }}
+                transition={{ ease: "easeOut", duration: 2 }}
               >
-                <AddIcon
+                <Box
                   sx={{
-                    fontSize: "80px",
-                    color: "lightgrey",
+                    width: { xs: "180px", md: "200px" },
+                    height: { xs: "180px", md: "200px" },
+                    borderRadius: "100%",
+                    border: "2px #10b981 solid",
+                    overflow: "hidden",
                   }}
+                >
+                  <img
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      filter: `${image.filter}`,
+                    }}
+                    alt="image"
+                    key={index}
+                    src={urlImage}
+                  />
+                </Box>
+
+                <FaDownload
+                  style={{ color: "#10b981" }}
+                  onClick={() =>
+                    saveImage(image.filter, image.width, image.height)
+                  }
                 />
-              </div>
-            )}
-          </div>
-        </label>
+              </motion.div>
+            ))
+          )}
+        </Box>
       </Box>
-      <Stack
-        padding="10px"
-        direction="row"
-        alignItems="center"
-        justifyContent="center"
-        spacing={2}
-      >
-        {images.map((image) => (
-          <img
-            style={{ filter: `${image.filter}` }}
-            alt="image"
-            key={image}
-            src={urlImage}
-            width={image.width}
-            height={image.height}
-          />
-        ))}
-      </Stack>
     </Layout>
   );
 };
 
 export default Home;
 
-export const getServerSideProps = async (context) => {
+export const getServerSideProps = async (context: any) => {
   const session = await getSession(context);
 
   if (!session)

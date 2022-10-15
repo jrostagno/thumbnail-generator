@@ -1,11 +1,11 @@
 import { Box } from "@mui/material";
 import Head from "next/head";
-import React from "react";
+import React, { FC } from "react";
+import { Layout } from "../../types/componets";
 import Footer from "../Footer/Footer";
 import NavBar from "../NavBar/NavBar";
-import styles from "./Layout.module.css";
 
-const Layout = ({ children, session }) => {
+const Layout: FC<Layout> = ({ children, session }) => {
   return (
     <div>
       <Head>

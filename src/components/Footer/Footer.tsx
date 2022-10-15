@@ -1,6 +1,5 @@
 import { Box } from "@mui/material";
 import React from "react";
-import styles from "./Footer.module.css";
 
 const Footer = () => {
   return (
@@ -12,12 +11,12 @@ const Footer = () => {
         width: "100%",
         justifyContent: "center",
         alignItems: "center",
-        color: "red",
-        height: "70px",
-        backgroundColor: "gray",
+        color: "#e2e8f0",
+        height: "40px",
+        backgroundColor: "#475569",
       }}
     >
-      Javier Rostagno
+      Javier Rostagno&copy;
     </Box>
   );
 };

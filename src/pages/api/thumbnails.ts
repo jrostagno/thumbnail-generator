@@ -1,27 +1,29 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-
-type Data = { width: string; height: string; filter: string }[];
+import { DataImages } from "../../types/componets";
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<DataImages>
 ) {
   res.status(200).json([
     {
-      width: "400px",
-      height: "300px",
+      width: 400,
+      height: 300,
       filter: "sepia(1)",
+      ref: "crop1",
     },
     {
-      width: "160px",
-      height: "120px",
+      width: 160,
+      height: 120,
       filter: "brightness(130%) saturate(129%) invert(0%) grayscale(0%)",
+      ref: "crop2",
     },
     {
-      width: "120px",
-      height: "120px",
-      filter: "brightness(200%) saturate(80%) invert(30%) grayscale(100%)",
+      width: 120,
+      height: 120,
+      filter: "grayscale(70%)",
+      ref: "crop3",
     },
   ]);
 }

@@ -1,0 +1,14 @@
+.thumbIcon {
+  color: "#64748b";
+  font-size: 1.5rem;
+  animation-name: fadeIn;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

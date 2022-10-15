@@ -5,34 +5,29 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { signOut } from "next-auth/react";
-import { SingleBedOutlined } from "@mui/icons-material";
+
+import { NavBar } from "../../types/componets";
 
 const pages = ["Products", "Pricing", "Blog"];
 // const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const settings = [
   { option: "Profile" },
-  { option: "Account" },
-  { option: "Dashboard" },
+
   { option: "Logout", onClick: () => signOut() },
 ];
 
-const NavBar = ({ session }) => {
+const NavBar: React.FC<NavBar> = ({ session }) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event) => {
+  const handleOpenUserMenu = (event: any) => {
     setAnchorElUser(event.currentTarget);
   };
 
@@ -44,10 +39,8 @@ const NavBar = ({ session }) => {
     setAnchorElUser(null);
   };
 
-  console.log(session);
-
   return (
-    <AppBar position="fixed">
+    <AppBar sx={{ backgroundColor: "#475569" }} position="fixed">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -66,20 +59,9 @@ const NavBar = ({ session }) => {
               textDecoration: "none",
             }}
           >
-            LOGO
+            Thumbnail 💅
           </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex" } }}>
             <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}
@@ -97,13 +79,7 @@ const NavBar = ({ session }) => {
               sx={{
                 display: { xs: "block", md: "none" },
               }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+            ></Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
@@ -122,20 +98,8 @@ const NavBar = ({ session }) => {
               textDecoration: "none",
             }}
           >
-            LOGO
+            Thumbnail
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
-
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -158,8 +122,8 @@ const NavBar = ({ session }) => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={setting.onClick}>
+              {settings.map((setting, index) => (
+                <MenuItem key={index} onClick={setting.onClick}>
                   <Typography textAlign="center">{setting.option}</Typography>
                 </MenuItem>
               ))}

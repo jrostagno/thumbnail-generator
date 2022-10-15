@@ -32,8 +32,8 @@ export default function Component() {
           component="h5"
         >
           {" "}
-          Thumbnail Generator ! <br />
-          Login width your GitHub account..{" "}
+          Thumbnail Generator 💅 <br />
+          Login with your GitHub account..{" "}
         </Typography>
       </Box>
       <Box
