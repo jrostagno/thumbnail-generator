@@ -2,20 +2,27 @@ import { Button, Typography } from "@mui/material";
 import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import { Box, Stack } from "@mui/system";
+import { Box } from "@mui/system";
+
+const STATUSES = {
+  loading: "loading",
+  authenticated: "authenticated",
+};
 
 export default function Component() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
 
-  if (status !== "loading" && status === "authenticated") {
+  if (status !== STATUSES.loading && status === STATUSES.authenticated) {
     router.push("/dashboard");
   }
+
   return (
     <Box
       sx={{
         minHeight: "100vh",
         display: "flex",
+        flexDirection: { xs: "column", md: "row" },
         gap: "20px",
         justifyContent: "center",
         alignItems: "center",
@@ -25,15 +32,14 @@ export default function Component() {
       <Box>
         <Typography
           variant="h5"
-          fontFamily="Roboto"
-          color="#64748b"
+          color="primary.main"
+          textAlign="center"
           fontSize="1.8rem"
           letterSpacing="0.01em"
           component="h5"
         >
-          {" "}
           Thumbnail Generator 💅 <br />
-          Login with your GitHub account..{" "}
+          Login with your GitHub account..
         </Typography>
       </Box>
       <Box
@@ -48,11 +54,7 @@ export default function Component() {
         }}
       >
         <Typography>Login</Typography>
-        <Button
-          sx={{ backgroundColor: "#64748b" }}
-          variant="contained"
-          onClick={() => signIn()}
-        >
+        <Button variant="outlined" onClick={() => signIn()}>
           Sign in <GitHubIcon sx={{ marginLeft: "8px" }} />
         </Button>
       </Box>

@@ -12,16 +12,11 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { signOut } from "next-auth/react";
 
-import { NavBar } from "../../types/componets";
+import { NavBar } from "../../types/components";
 
 const pages = ["Products", "Pricing", "Blog"];
-// const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
-const settings = [
-  { option: "Profile" },
-
-  { option: "Logout", onClick: () => signOut() },
-];
+const settings = [{ option: "Logout", onClick: () => signOut() }];
 
 const NavBar: React.FC<NavBar> = ({ session }) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -40,10 +35,16 @@ const NavBar: React.FC<NavBar> = ({ session }) => {
   };
 
   return (
-    <AppBar sx={{ backgroundColor: "#475569" }} position="fixed">
+    <AppBar sx={{ backgroundColor: "secondary.main" }} position="fixed">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          <AdbIcon
+            sx={{
+              display: { xs: "none", md: "flex" },
+              mr: 1,
+              color: "primary.main",
+            }}
+          />
           <Typography
             variant="h6"
             noWrap
@@ -52,10 +53,9 @@ const NavBar: React.FC<NavBar> = ({ session }) => {
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "inherit",
+              color: "primary.main",
               textDecoration: "none",
             }}
           >
@@ -81,7 +81,13 @@ const NavBar: React.FC<NavBar> = ({ session }) => {
               }}
             ></Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+          <AdbIcon
+            sx={{
+              display: { xs: "flex", md: "none" },
+              mr: 1,
+              color: "primary.main",
+            }}
+          />
           <Typography
             variant="h5"
             noWrap
@@ -94,7 +100,7 @@ const NavBar: React.FC<NavBar> = ({ session }) => {
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "inherit",
+              color: "primary.main",
               textDecoration: "none",
             }}
           >

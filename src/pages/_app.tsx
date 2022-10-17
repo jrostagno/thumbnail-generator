@@ -1,16 +1,20 @@
 import "../../styles/globals.css";
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
-
 import type { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
+import { ThemeProvider } from "@emotion/react";
+import theme from "../theme/theme";
+import { Session } from "next-auth";
 
-function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+interface Props extends AppProps {
+  pageProps: { session: Session };
+}
+
+function MyApp({ Component, pageProps: { session, ...pageProps } }: Props) {
   return (
     <SessionProvider session={session}>
-      <Component {...pageProps} />
+      <ThemeProvider theme={theme}>
+        <Component {...pageProps} />
+      </ThemeProvider>
     </SessionProvider>
   );
 }

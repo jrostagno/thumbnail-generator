@@ -4,16 +4,24 @@ import AddIcon from "@mui/icons-material/Add";
 import { Stack } from "@mui/system";
 import { Box, Typography } from "@mui/material";
 import { FaHandPointDown } from "react-icons/fa";
-import styles from "./UploadImage.module.css";
 
 import { motion } from "framer-motion";
-import { UploadImage } from "../../types/componets";
+import { UploadImage } from "../../types/components";
+import { iconContent, imgContent } from "./styles";
 
 const UploadImage: React.FC<UploadImage> = ({
   handleOnChange,
   avatarRef,
   preview,
 }) => {
+  const bounceTransition = {
+    y: {
+      duration: 0.4,
+      yoyo: Infinity,
+      easy: "easeOut",
+    },
+  };
+
   return (
     <Stack spacing={3} sx={{ alignItems: "center" }}>
       <Box sx={{ display: "flex", gap: "20px", alignItems: "center" }}>
@@ -25,80 +33,56 @@ const UploadImage: React.FC<UploadImage> = ({
           letterSpacing="0.01em"
           component="h3"
         >
-          Upload your pic !
+          Upload your Pic !
         </Typography>
-        <FaHandPointDown color="#64748b" className={styles.thumbIcon} />
+        <motion.span
+          transition={bounceTransition}
+          animate={{ y: ["30%", "-30%"] }}
+        >
+          <FaHandPointDown style={{ color: "#64748b", fontSize: "1.5rem" }} />
+        </motion.span>
       </Box>
 
-      <label htmlFor="datosImg">
+      <label style={{ cursor: "pointer" }} htmlFor="datosImg">
         <input
+          accept="image/gif, image/jpeg, image/png"
           hidden
           onChange={handleOnChange}
           className="imgInput"
           type="file"
           id="datosImg"
         />
-        <div
-          id="avatar"
-          style={{
-            width: "300px",
-            height: "300px",
-            borderRadius: "100%",
-            border: "1px",
 
-            overflow: "hidden",
-          }}
-        >
-          {preview ? (
-            <div
-              id="avatar"
+        {preview ? (
+          <Box id="avatar" sx={imgContent}>
+            <img
+              ref={avatarRef}
               style={{
-                width: "300px",
-                height: "300px",
-                borderRadius: "100%",
-                border: "1px",
-                overflow: "hidden",
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
               }}
-            >
-              <img
-                ref={avatarRef}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                }}
-                src={preview}
-                alt="avatar"
-              />
-            </div>
-          ) : (
-            <motion.div
-              animate={{ rotate: 180 }}
-              transition={{ ease: "easeOut", duration: 2 }}
-            >
-              <div
-                id="avatar"
-                style={{
-                  width: "300px",
-                  height: "300px",
-                  borderRadius: "100%",
-                  border: "1px dashed  lightgrey",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  overflow: "hidden",
-                }}
-              >
+              src={preview}
+              alt="avatar"
+            />
+          </Box>
+        ) : (
+          <motion.div
+            animate={{ rotate: 180 }}
+            transition={{ ease: "easeOut", duration: 2 }}
+          >
+            <Box id="avatar" sx={iconContent}>
+              <motion.div whileHover="hover">
                 <AddIcon
                   sx={{
                     fontSize: "80px",
                     color: "lightgrey",
                   }}
                 />
-              </div>
-            </motion.div>
-          )}
-        </div>
+              </motion.div>
+            </Box>
+          </motion.div>
+        )}
       </label>
     </Stack>
   );
