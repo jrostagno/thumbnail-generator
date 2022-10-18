@@ -46,12 +46,12 @@ const Home: NextPage = () => {
       setIsLoading(false);
     } else {
       const reader = new FileReader();
+      image && reader.readAsDataURL(image);
       reader.onloadend = () => {
         setPreview(reader.result as string);
       };
-      image && reader.readAsDataURL(image);
 
-      setTimeout(async () => {
+      setTimeout(() => {
         getImages().then((res) => setImages(res.data));
         image && setUrlImage(URL.createObjectURL(image));
         setIsLoading(false);
@@ -140,7 +140,7 @@ const Home: NextPage = () => {
             {isLoading ? (
               <img src="./loading.gif" alt="loading" />
             ) : (
-              images.map((image, index) => (
+              images?.map((image, index) => (
                 <motion.div
                   key={index}
                   style={{
