@@ -8,11 +8,17 @@ export interface Layout {
 export interface NavBar {
   session: any;
 }
+export interface LabelError {
+  children: ReactNode;
+}
 
 export interface UploadImage {
-  handleOnChange: (event: React.FormEvent<HTMLInputElement>) => void;
   avatarRef: LegacyRef<HTMLImageElement> | undefined;
-  preview: any;
+  setImages: (values: DataImage[]) => void;
+  setIsLoading: (value: boolean) => void;
+  setShowButton: (value: boolean) => void;
+  setPhotoURL: (value: string) => void;
+  photoURL: string;
 }
 
 export type DataImage = {
@@ -21,6 +27,8 @@ export type DataImage = {
   filter: string;
   ref: string;
 };
+
+export type CropProps = { x: number; y: number };
 
 export interface ButtonPrimary {
   children: React.ReactNode;

@@ -1,12 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 import { Box } from "@mui/system";
 import type { NextPage } from "next";
-import { FormEvent, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import { Toaster } from "react-hot-toast";
 
 import Layout from "../../components/Layout/Layout";
-import { Stack, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
 
 import { getSession, useSession } from "next-auth/react";
 import UploadImage from "../../components/UploadImage/UploadImage";
@@ -19,46 +19,14 @@ import ButtonPrimary from "../../components/Buttons/ButtonPrimary";
 import ActionButtons from "../../components/ActionsButtons/ActionButtons";
 
 const Home: NextPage = () => {
-  const [preview, setPreview] = useState<string>("");
-  const [urlImage, setUrlImage] = useState<string>("");
   const [images, setImages] = useState<DataImage[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showButton, setShowButton] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
+  const [photoURL, setPhotoURL] = useState<string>("");
 
   const avatarRef = useRef<any>();
 
   const { data: session } = useSession();
-
-  const handleOnChange = async (event: FormEvent<HTMLInputElement>) => {
-    setError(false);
-    setIsLoading(true);
-    setShowButton(false);
-    const image = event.currentTarget.files?.length
-      ? event.currentTarget.files[0]
-      : null;
-
-    if (Number(image?.size) > 2000000) {
-      setError(true);
-      setPreview("");
-      setUrlImage("");
-      setImages([]);
-      setIsLoading(false);
-    } else {
-      const reader = new FileReader();
-      image && reader.readAsDataURL(image);
-      reader.onloadend = () => {
-        setPreview(reader.result as string);
-      };
-
-      setTimeout(() => {
-        getImages().then((res) => setImages(res.data));
-        image && setUrlImage(URL.createObjectURL(image));
-        setIsLoading(false);
-        setShowButton(true);
-      }, 3000);
-    }
-  };
 
   const changeContrast = () => {
     setImages(contrastFilter(images));
@@ -79,33 +47,20 @@ const Home: NextPage = () => {
           display: "flex",
           flexDirection: "column",
           padding: "20px",
-          gap: "60px",
-          marginTop: "60px",
+          gap: "30px",
+          marginTop: "20px",
           alignItems: "center",
         }}
       >
-        <Stack spacing={3}>
+        <Stack spacing={2}>
           <UploadImage
-            handleOnChange={handleOnChange}
-            preview={preview}
             avatarRef={avatarRef}
+            setPhotoURL={setPhotoURL}
+            photoURL={photoURL}
+            setShowButton={setShowButton}
+            setImages={setImages}
+            setIsLoading={setIsLoading}
           />
-
-          {error && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Typography
-                color="error.main"
-                fontFamily="monospace"
-                fontSize="2rem"
-              >
-                😔 Sorry! The Image is too big...
-              </Typography>
-            </motion.div>
-          )}
         </Stack>
 
         <Stack>
@@ -116,7 +71,13 @@ const Home: NextPage = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
             >
-              <Box sx={{ display: "flex", gap: "10px", margin: "auto" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: "10px",
+                  margin: "auto",
+                }}
+              >
                 <ButtonPrimary onClick={changeOriginal}>Original</ButtonPrimary>
                 <ButtonPrimary onClick={changeContrast}>Contrast</ButtonPrimary>
                 <ButtonPrimary onClick={changeGrayScale}>
@@ -131,7 +92,7 @@ const Home: NextPage = () => {
               margin: "auto",
               display: "flex",
               flexDirection: "row",
-              gap: "5rem",
+              gap: "6rem",
               flexWrap: "wrap",
               justifyContent: "center",
               padding: "5rem",
@@ -169,7 +130,7 @@ const Home: NextPage = () => {
                         filter: `${image.filter}`,
                       }}
                       alt="image"
-                      src={urlImage}
+                      src={photoURL}
                     />
                   </Box>
                   <ActionButtons image={image} avatarRef={avatarRef} />

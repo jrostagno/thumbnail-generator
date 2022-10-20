@@ -1,5 +1,4 @@
 import { IconButton, Tooltip } from "@mui/material";
-import { CopyToClipboard } from "react-copy-to-clipboard";
 import toast from "react-hot-toast";
 import { MdContentCopy } from "react-icons/md";
 import React from "react";
@@ -9,6 +8,11 @@ import { Box } from "@mui/system";
 import { ActionButton } from "../../types/components";
 
 const ActionButtons: React.FC<ActionButton> = ({ image, avatarRef }) => {
+  const copyToClip = () => {
+    navigator.clipboard.writeText(
+      generateLink(image.filter, image.width, image.height, avatarRef)
+    );
+  };
   return (
     <Box
       sx={{
@@ -39,29 +43,27 @@ const ActionButtons: React.FC<ActionButton> = ({ image, avatarRef }) => {
           <FaDownload style={{ color: "#14b8a6" }} />
         </IconButton>
       </Tooltip>
-      <CopyToClipboard
-        text={generateLink(image.filter, image.width, image.height, avatarRef)}
-      >
-        <Tooltip title="Copy URL !">
-          <IconButton
-            onClick={() =>
-              toast.success("Copy Succes!", {
-                style: {
-                  border: "1px solid #14b8a6",
-                  padding: "16px",
-                  color: "#14b8a6",
-                },
-                iconTheme: {
-                  primary: "#14b8a6",
-                  secondary: "#FFFAEE",
-                },
-              })
-            }
-          >
-            <MdContentCopy style={{ color: "#14b8a6" }} />
-          </IconButton>
-        </Tooltip>
-      </CopyToClipboard>
+
+      <Tooltip title="Copy URL !">
+        <IconButton
+          onClick={() => {
+            copyToClip();
+            toast.success("Copy Succes!", {
+              style: {
+                border: "1px solid #14b8a6",
+                padding: "16px",
+                color: "#14b8a6",
+              },
+              iconTheme: {
+                primary: "#14b8a6",
+                secondary: "#FFFAEE",
+              },
+            });
+          }}
+        >
+          <MdContentCopy style={{ color: "#14b8a6" }} />
+        </IconButton>
+      </Tooltip>
     </Box>
   );
 };
