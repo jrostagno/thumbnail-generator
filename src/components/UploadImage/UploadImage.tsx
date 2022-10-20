@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState, FormEvent } from "react";
+import { Cancel } from "@mui/icons-material";
+import CropIcon from "@mui/icons-material/Crop";
 import AddIcon from "@mui/icons-material/Add";
 import { Stack } from "@mui/system";
 import { Box, DialogActions, Slider, Typography, Button } from "@mui/material";
@@ -201,6 +203,7 @@ const UploadImage: React.FC<UploadImage> = ({
             }}
           >
             <Button
+              startIcon={<Cancel />}
               variant="outlined"
               onClick={() => {
                 setOpen(false);
@@ -209,7 +212,11 @@ const UploadImage: React.FC<UploadImage> = ({
             >
               Cancel
             </Button>
-            <Button variant="contained" onClick={cropImage}>
+            <Button
+              variant="contained"
+              startIcon={<CropIcon />}
+              onClick={cropImage}
+            >
               Crop
             </Button>
           </Box>

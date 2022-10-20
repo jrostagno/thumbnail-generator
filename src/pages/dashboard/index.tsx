@@ -118,7 +118,7 @@ const Home: NextPage = () => {
                       width: { xs: "180px", md: "200px" },
                       height: { xs: "180px", md: "200px" },
                       borderRadius: "100%",
-                      border: "2px primary solid",
+                      border: "2px solid lightgrey",
                       overflow: "hidden",
                     }}
                   >

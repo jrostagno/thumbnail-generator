@@ -11,7 +11,6 @@ const Layout: FC<Layout> = ({ children, session }) => {
       <Head>
         <title>ThmubNail Generator</title>
       </Head>
-
       <Box
         sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
       >
